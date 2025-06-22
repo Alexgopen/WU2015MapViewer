@@ -275,6 +275,54 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
                 g.drawString(label, labelX, y);
             }
         }
+        
+        if (image != null) {
+            g.setFont(new Font("Consolas", Font.PLAIN, 10));
+
+            double relX = (mouseX - drawX) / cellW;
+            double relY = (mouseY - drawY) / cellH;
+
+            int col = (int)Math.floor(relX);
+            int row = (int)Math.floor(relY);
+
+            String coord;
+            if (col >= 0 && col < cols && row >= 0 && row < rows) {
+                coord = String.format("%c%02d", 'A' + row, col + 1);
+            } else {
+                coord = "";
+            }
+
+            if (!coord.isEmpty()) {
+                // Measure text size
+                FontMetrics fm = g.getFontMetrics();
+                int textW = fm.stringWidth(coord);
+                int textH = fm.getHeight();
+
+                int padding = 3;
+                int boxW = textW + padding * 2;
+                int boxH = textH + padding;
+
+                int tooltipX = mouseX;
+                int tooltipY = mouseY;
+
+                // Adjust if tooltip would go off screen
+                if (tooltipX + boxW > viewW) tooltipX = viewW - boxW - 4;
+                if (tooltipY + boxH > viewH) tooltipY = viewH - boxH - 4;
+
+                // Draw tooltip background (more transparent)
+                g.setColor(new Color(0, 0, 80, 100));
+                tooltipX -= boxW;
+                tooltipY -= boxH;
+                g.fillRoundRect(tooltipX, tooltipY, boxW, boxH, 8, 8);
+
+                // Draw text centered in box
+                int textX = tooltipX + (boxW - textW) / 2;
+                int textY = tooltipY + (boxH + fm.getAscent()) / 2 - 2;
+                g.setColor(Color.WHITE);
+                g.drawString(coord, textX, textY);
+            }
+        }
+
 
         g.dispose();
         repaint();
