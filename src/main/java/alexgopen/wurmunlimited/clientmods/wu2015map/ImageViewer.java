@@ -50,7 +50,11 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
         	{
 	            JOptionPane.showMessageDialog(null, "Failed to retrieve map image.");
         	}
-            if (image == null) System.exit(0);
+            if (image == null) 
+        	{
+        		closeWindow();
+        		return;
+        	}
         }
 
         frame = new JFrame("WU 2015 Map Viewer");
@@ -331,13 +335,21 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
     protected void paintComponent(Graphics g) {
         g.drawImage(backBuffer, 0, 0, null);
     }
+    
+    private void closeWindow() {
+        running = false;
+        if (frame != null) {
+            frame.dispose();
+        }
+    }
 
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W) up = true;
         if (e.getKeyCode() == KeyEvent.VK_S) down = true;
         if (e.getKeyCode() == KeyEvent.VK_A) left = true;
         if (e.getKeyCode() == KeyEvent.VK_D) right = true;
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) System.exit(0);
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) closeWindow();
+        if (e.getKeyCode() == KeyEvent.VK_M) closeWindow();
     }
 
     public void keyReleased(KeyEvent e) {
