@@ -54,8 +54,14 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
         }
 
         frame = new JFrame("WU 2015 Map Viewer");
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                running = false;
+            }
+        });
         frame.setSize(1200, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(this);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);  // Center the window
