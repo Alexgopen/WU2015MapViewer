@@ -227,7 +227,55 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
         int drawX = (w >= viewW) ? offsetX : (viewW - w) / 2;
         int drawY = (h >= viewH) ? offsetY : (viewH - h) / 2;
 
+        // Draw map image
         g.drawImage(image, drawX, drawY, w, h, null);
+
+        // Draw grid overlay
+        g.setColor(new Color(0, 0, 0, 180)); // Semi-opaque black lines
+        g.setStroke(new BasicStroke(1.0f));
+
+        int cols = 26;
+        int rows = 26;
+
+        double cellW = (double)w / cols;
+        double cellH = (double)h / rows;
+
+        // Draw vertical lines
+        for (int i = 0; i <= cols; i++) {
+            int x = (int)(drawX + i * cellW);
+            g.drawLine(x, drawY, x, drawY + h);
+        }
+
+        // Draw horizontal lines
+        for (int i = 0; i <= rows; i++) {
+            int y = (int)(drawY + i * cellH);
+            g.drawLine(drawX, y, drawX + w, y);
+        }
+
+        // Draw labels
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.setColor(Color.WHITE);
+
+        // Column numbers (1-26)
+        for (int i = 0; i < cols; i++) {
+            String label = String.valueOf(i + 1);
+            int x = (int)(drawX + i * cellW + cellW / 2);
+            int y = drawY - 4;
+            g.drawString(label, x - g.getFontMetrics().stringWidth(label) / 2, Math.max(y, 12));
+        }
+
+        // Row letters (A-Z) — always along left edge of screen
+        for (int i = 0; i < rows; i++) {
+            String label = String.valueOf((char)('A' + i));
+            int y = (int)(drawY + i * cellH + cellH / 2 + g.getFontMetrics().getAscent() / 2);
+
+            // Only draw if this row is at least partially visible on screen
+            if (y >= -cellH && y <= viewH + cellH) {
+                int labelX = 4;  // fixed 4px from left screen edge
+                g.drawString(label, labelX, y);
+            }
+        }
+
         g.dispose();
         repaint();
     }
