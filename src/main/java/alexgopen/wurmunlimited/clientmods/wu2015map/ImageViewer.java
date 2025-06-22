@@ -79,6 +79,23 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
         requestFocusInWindow();
 
         resizeBackBuffer();
+        
+        
+        // Set initial zoom to minimum (zoomed out)
+        zoom = 0.5;
+
+        // Center the image
+        int w = (int)(image.getWidth() * zoom);
+        int h = (int)(image.getHeight() * zoom);
+        int viewW = backBuffer.getWidth();
+        int viewH = backBuffer.getHeight();
+
+        // Center the image within the viewport
+        offsetX = (viewW - w) / 2;
+        offsetY = (viewH - h) / 2;
+
+        clampPan();
+        
         new Thread(this).start();
     }
 
