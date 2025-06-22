@@ -20,7 +20,7 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
     // Repo edit url:
     // https://github.com/Alexgopen/latestMapUrl/blob/master/latestMapUrl.txt
     
-    private static String latestMapUrlFile = "https://raw.githubusercontent.com/Alexgopen/latestMapUrl/refs/heads/master/latestMapUrl.txt";
+    private static String latestMapUrlFile = "https://raw.githubusercontent.com/Alexgopen/WU2015MapViewer/refs/heads/master/latestMapUrl.txt";
     @SuppressWarnings("unused")
 	private static String testImageUrl = "https://u.cubeupload.com/alexgopen/mapdumpJune222025.png";
     
