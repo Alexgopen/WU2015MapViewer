@@ -17,6 +17,10 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
     JFrame frame;
     int mouseX = 0, mouseY = 0;
     
+    boolean dragging = false;
+    int lastDragX = 0;
+    int lastDragY = 0;
+    
     // Repo edit url:
     // https://github.com/Alexgopen/latestMapUrl/blob/master/latestMapUrl.txt
     
@@ -79,6 +83,53 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
                 mouseY = e.getY();
             }
         });
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+            	if (e.getButton() == MouseEvent.BUTTON1) {
+	                dragging = true;
+	                lastDragX = e.getX();
+	                lastDragY = e.getY();
+            	}
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            	if (e.getButton() == MouseEvent.BUTTON1) {
+            		dragging = false;
+            		mouseX = e.getX();
+                    mouseY = e.getY();
+            	}
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (dragging) {
+                    int dx = e.getX() - lastDragX;
+                    int dy = e.getY() - lastDragY;
+
+                    offsetX += dx;
+                    offsetY += dy;
+
+                    clampPan();
+
+                    lastDragX = e.getX();
+                    lastDragY = e.getY();
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+        });
+        
+        
+        
+        
         setFocusable(true);
         requestFocusInWindow();
 
@@ -280,7 +331,7 @@ public class ImageViewer extends JPanel implements KeyListener, MouseWheelListen
             }
         }
         
-        if (image != null) {
+        if (image != null && !this.dragging) {
             g.setFont(new Font("Consolas", Font.PLAIN, 10));
 
             double relX = (mouseX - drawX) / cellW;
